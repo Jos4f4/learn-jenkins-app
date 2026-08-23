@@ -75,7 +75,24 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Staging') {
+            agent {
+                docker {
+                    image 'node:18'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify deploy --dir=build --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"
+                '''
+            }
+        }
+
+        stage('Deploy Prod') {
             agent {
                 docker {
                     image 'node:18'
@@ -90,7 +107,7 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"
                 '''
             }
-        } // <-- Esta chave de fechamento estava faltando
+        }
 
         stage('Prod E2E') {
             agent {
