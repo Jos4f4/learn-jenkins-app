@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NETLIFY_SITE_ID = 'PUT YOUR NETLIFY SITE ID HERE'
+        NETLIFY_SITE_ID = '85299020-6a3f-482a-9072-c80c16c7c9d5'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
 
@@ -39,7 +39,6 @@ pipeline {
 
                     steps {
                         sh '''
-                            #test -f build/index.html
                             npm test
                         '''
                     }
@@ -63,7 +62,7 @@ pipeline {
                             npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10
-                            npx playwright test  --reporter=html
+                            npx playwright test --reporter=html
                         '''
                     }
 
@@ -91,6 +90,7 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"
                 '''
             }
+        } // <-- Esta chave de fechamento estava faltando
 
         stage('Prod E2E') {
             agent {
@@ -106,7 +106,7 @@ pipeline {
 
             steps {
                 sh '''
-                    npx playwright test  --reporter=html
+                    npx playwright test --reporter=html
                 '''
             }
 
