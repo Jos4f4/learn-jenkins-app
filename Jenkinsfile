@@ -2,18 +2,12 @@ pipeline {
     agent any
 
     environment {
-        NETLIFY_SITE_ID = '85299020-6a3f-482a-9072-c80c16c7c9d5'
+    	NETLIFY_SITE_ID = '85299020-6a3f-482a-9072-c80c16c7c9d5'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
-
-        stage('Docker') {
-            steps {
-                sh 'docker build -t my-playwright .'
-            }
-        }
 
         stage('Build') {
             agent {
@@ -100,7 +94,7 @@ pipeline {
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     netlify status
                     netlify deploy --dir=build --json > deploy-output.json
-                    CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' deploy-output.json)
+                    CI_ENVIRONMENT_URL=$(jq -r '.deploy_url' deploy-output.json)
                     npx playwright test  --reporter=html
                 '''
             }
