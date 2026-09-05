@@ -15,13 +15,7 @@ pipeline {
 
         stage('Prepare Agent') {
             steps {
-                sh '''
-                    if [ -f ci/Dockerfile ]; then
-                        docker build -t my-aws-cli -f ci/Dockerfile .
-                    else
-                        docker build -t my-aws-cli .
-                    fi
-                '''
+                sh 'docker build -t my-aws-cli -f ci/Dockerfile-aws-cli .'
             }
         }
 
