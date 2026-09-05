@@ -5,7 +5,7 @@ pipeline {
         REACT_APP_VERSION = "1.0.$BUILD_ID"
         APP_NAME = 'learnjenkinsapp'
         AWS_DEFAULT_REGION = 'us-east-1'
-        AWS_DOCKER_REGISTRY = '191699140245.dkr.ecr.us-east-2.amazonaws.com'
+        AWS_DOCKER_REGISTRY = '191699140245.dkr.ecr.us-east-2.amazonaws.com/learnjenkinsapp'
         AWS_ECS_CLUSTER = 'LearnJenkinsApp-Cluster-Prod'
         AWS_ECS_SERVICE_PROD = 'LearnJenkinsApp-Service-Prod'
         AWS_ECS_TD_PROD = 'LearnJenkinsApp-TaskDefinition-Prod'
@@ -35,7 +35,7 @@ pipeline {
         stage('Build Docker image') {
             agent {
                 docker {
-                    image 'my-aws-cli'
+                    image 'amazon/aws-cli'
                     reuseNode true
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
@@ -55,7 +55,7 @@ pipeline {
         stage('Deploy to AWS') {
             agent {
                 docker {
-                    image 'my-aws-cli'
+                    image 'amazon/aws-cli'
                     reuseNode true
                     args "--entrypoint=''"
                 }
